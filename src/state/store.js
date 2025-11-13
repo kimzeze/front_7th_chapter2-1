@@ -26,6 +26,9 @@ export const store = createStore({
       error: null,
     },
 
+    // 카테고리
+    categories: {},
+
     // 상세 페이지 (단일 상품)
     detail: {
       product: null,
@@ -79,6 +82,13 @@ export const store = createStore({
           error: error.message || "상품 로딩 실패",
         },
       });
+    },
+
+    // ━━━━━ Categories (카테고리) ━━━━━
+
+    // 카테고리 설정
+    setCategories(setState, categories) {
+      setState({ categories });
     },
 
     // ━━━━━ Detail (상품 상세) ━━━━━

@@ -1,7 +1,7 @@
 import { withLifecycle } from "../core/lifecycle.js";
 import * as router from "../core/router.js";
 import { store } from "../state/store.js";
-import { getProducts } from "../api/productApi.js";
+import { getProducts, getCategories } from "../api/productApi.js";
 import { PageLayout } from "./PageLayout.js";
 import { SearchForm, ProductList } from "../components/index.js";
 
@@ -28,8 +28,12 @@ async function loadProducts() {
 export const Homepage = withLifecycle(
   {
     // 컴포넌트 초기화 시 1번만 실행
-    mount() {
+    async mount() {
       loadProducts();
+
+      // 카테고리 로드 (1회만)
+      const categories = await getCategories();
+      store.dispatch({ type: "setCategories", payload: categories });
     },
 
     // 쿼리 파라미터 변경 감지
@@ -48,9 +52,10 @@ export const Homepage = withLifecycle(
   // 렌더링 함수
   () => {
     const { products, loading, filters, pagination } = store.getState().home;
+    const { categories } = store.getState();
 
     return PageLayout({
-      children: /* HTML */ ` ${SearchForm({ filters, pagination })} ${ProductList({ loading, products, pagination })} `,
+      children: /* HTML */ ` ${SearchForm({ filters, categories })} ${ProductList({ loading, products, pagination })} `,
     });
   },
 );
