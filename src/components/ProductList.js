@@ -26,7 +26,7 @@ const Loading = /* HTML */ `
   </div>
 `;
 
-const ProductItem = ({ title, image, lprice, productId }) => {
+const ProductItem = ({ title, image, lprice, productId, brand }) => {
   return /* HTML */ `
     <div
       class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden product-card"
@@ -45,14 +45,14 @@ const ProductItem = ({ title, image, lprice, productId }) => {
       <div class="p-3">
         <div class="cursor-pointer product-info mb-3">
           <h3 class="text-sm font-medium text-gray-900 line-clamp-2 mb-1">${title}</h3>
-          <p class="text-xs text-gray-500 mb-2"></p>
+          <p class="text-xs text-gray-500 mb-2">${brand || ""}</p>
           <p class="text-lg font-bold text-gray-900">${Number(lprice).toLocaleString()}원</p>
         </div>
         <!-- 장바구니 버튼 -->
         <button
           class="w-full bg-blue-600 text-white text-sm py-2 px-3 rounded-md
                     hover:bg-blue-700 transition-colors add-to-cart-btn"
-          data-product-id="85067212996"
+          data-product-id="${productId}"
         >
           장바구니 담기
         </button>
