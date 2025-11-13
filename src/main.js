@@ -73,6 +73,15 @@ document.body.addEventListener("click", (e) => {
   }
 });
 
+// 검색 기능
+document.body.addEventListener("keydown", (e) => {
+  const $searchInput = e.target.closest("#search-input");
+  if ($searchInput && e.key === "Enter") {
+    const searchValue = $searchInput.value.trim();
+    router.updateQuery({ search: searchValue || undefined });
+  }
+});
+
 // 애플리케이션 시작
 const main = async () => {
   router.push(location.pathname + location.search);

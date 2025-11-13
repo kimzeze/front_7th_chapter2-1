@@ -1,4 +1,6 @@
-export const SearchForm = () => {
+export const SearchForm = ({ filters = {} }) => {
+  const searchValue = filters.search || "";
+
   return /* HTML */ `
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
       <!-- 검색창 -->
@@ -8,7 +10,7 @@ export const SearchForm = () => {
             type="text"
             id="search-input"
             placeholder="상품명을 검색해보세요..."
-            value=""
+            value="${searchValue}"
             class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg
                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
