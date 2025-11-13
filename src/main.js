@@ -4,6 +4,7 @@ import { Homepage } from "./pages/HomePage.js";
 import { DetailPage } from "./pages/DetailPage.js";
 import { NotFoundPage } from "./pages/NotFoundPage.js";
 import { showToast } from "./utils/toast.js";
+import { openCartModal, closeCartModal } from "./utils/cartModal.js";
 
 const enableMocking = () =>
   import("./mocks/browser.js").then(({ worker }) =>
@@ -48,6 +49,24 @@ document.body.addEventListener("click", (e) => {
   if ($link) {
     e.preventDefault();
     router.push($link.getAttribute("href"));
+    return;
+  }
+
+  // 장바구니 아이콘 클릭 - 모달 열기
+  if (e.target.closest("#cart-icon-btn")) {
+    openCartModal();
+    return;
+  }
+
+  // 장바구니 모달 닫기 버튼
+  if (e.target.closest("#cart-modal-close-btn")) {
+    closeCartModal();
+    return;
+  }
+
+  // 장바구니 모달 배경 클릭 - 닫기
+  if (e.target.id === "cart-modal-backdrop") {
+    closeCartModal();
     return;
   }
 
@@ -117,8 +136,15 @@ document.body.addEventListener("click", (e) => {
   }
 });
 
-// 검색 기능
+// 검색 기능 및 ESC 키 핸들러
 document.body.addEventListener("keydown", (e) => {
+  // ESC 키로 모달 닫기
+  if (e.key === "Escape") {
+    closeCartModal();
+    return;
+  }
+
+  // 검색 기능
   const $searchInput = e.target.closest("#search-input");
   if ($searchInput && e.key === "Enter") {
     const searchValue = $searchInput.value.trim();
