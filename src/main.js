@@ -4,7 +4,7 @@ import { Homepage } from "./pages/HomePage.js";
 import { DetailPage } from "./pages/DetailPage.js";
 import { NotFoundPage } from "./pages/NotFoundPage.js";
 import { showToast } from "./utils/toast.js";
-import { openCartModal, closeCartModal } from "./utils/cartModal.js";
+import { openCartModal, closeCartModal, getSelectedIds, setSelectedIds } from "./utils/cartModal.js";
 
 const enableMocking = () =>
   import("./mocks/browser.js").then(({ worker }) =>
@@ -73,6 +73,31 @@ document.body.addEventListener("click", (e) => {
   // 장바구니 모달 내 기능들
   const $cartModal = document.getElementById("cart-modal");
   if ($cartModal) {
+    // 전체 비우기
+    const $clearCartBtn = e.target.closest("#cart-modal-clear-cart-btn");
+    if ($clearCartBtn) {
+      const cart = store.getState().cart;
+      if (cart.length > 0) {
+        store.dispatch({ type: "clearCart" });
+        showToast("장바구니가 비워졌습니다", "info");
+      }
+      return;
+    }
+
+    // 선택 삭제
+    const $removeSelectedBtn = e.target.closest("#cart-modal-remove-selected-btn");
+    if ($removeSelectedBtn) {
+      const selectedIds = getSelectedIds();
+      if (selectedIds.length > 0) {
+        selectedIds.forEach((productId) => {
+          store.dispatch({ type: "removeFromCart", payload: productId });
+        });
+        setSelectedIds([]);
+        showToast(`${selectedIds.length}개 상품이 삭제되었습니다`, "info");
+      }
+      return;
+    }
+
     // 수량 증가
     const $increaseBtn = e.target.closest(".quantity-increase-btn");
     if ($increaseBtn) {
@@ -205,8 +230,42 @@ document.body.addEventListener("keydown", (e) => {
   }
 });
 
-// 필터/정렬 기능
+// 필터/정렬 및 체크박스 기능
 document.body.addEventListener("change", (e) => {
+  // 장바구니 모달 체크박스
+  const $cartModal = document.getElementById("cart-modal");
+  if ($cartModal) {
+    // 전체 선택 체크박스
+    const $selectAllCheckbox = e.target.closest("#cart-modal-select-all-checkbox");
+    if ($selectAllCheckbox) {
+      const cart = store.getState().cart;
+      if ($selectAllCheckbox.checked) {
+        // 전체 선택
+        setSelectedIds(cart.map((item) => item.id));
+      } else {
+        // 전체 해제
+        setSelectedIds([]);
+      }
+      return;
+    }
+
+    // 개별 체크박스
+    const $itemCheckbox = e.target.closest(".cart-item-checkbox");
+    if ($itemCheckbox) {
+      const productId = $itemCheckbox.dataset.productId;
+      const selectedIds = getSelectedIds();
+
+      if ($itemCheckbox.checked) {
+        // 선택 추가
+        setSelectedIds([...selectedIds, productId]);
+      } else {
+        // 선택 제거
+        setSelectedIds(selectedIds.filter((id) => id !== productId));
+      }
+      return;
+    }
+  }
+
   // 페이지당 상품 수 변경
   const $limitSelect = e.target.closest("#limit-select");
   if ($limitSelect) {
