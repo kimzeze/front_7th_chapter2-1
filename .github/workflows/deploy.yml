@@ -4,6 +4,7 @@ on:
   push: # push trigger
     branches:
       - main
+      - feature-* # Feature 브랜치도 배포
 
 permissions:
   contents: read
