@@ -38,7 +38,7 @@ export const store = createStore({
     },
 
     // 장바구니 (localStorage에서 복원)
-    cart: load("cart") || [],
+    cart: load("shopping_cart") || [],
   },
 
   // ===== 액션 =====
@@ -160,7 +160,7 @@ export const store = createStore({
       }
 
       // localStorage에 저장
-      save("cart", cart);
+      save("shopping_cart", cart);
 
       // 상태 업데이트
       setState({ cart });
@@ -171,7 +171,7 @@ export const store = createStore({
       const currentState = getState();
       const cart = currentState.cart.filter((item) => item.id !== productId);
 
-      save("cart", cart);
+      save("shopping_cart", cart);
       setState({ cart });
     },
 
@@ -184,14 +184,14 @@ export const store = createStore({
       if (item) {
         // 최소 수량은 1
         item.quantity = Math.max(1, quantity);
-        save("cart", cart);
+        save("shopping_cart", cart);
         setState({ cart });
       }
     },
 
     // 장바구니 전체 비우기
     clearCart(setState) {
-      save("cart", []);
+      save("shopping_cart", []);
       setState({ cart: [] });
     },
   },
