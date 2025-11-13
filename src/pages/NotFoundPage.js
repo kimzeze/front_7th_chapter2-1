@@ -1,9 +1,11 @@
+import { PageLayout } from "./PageLayout.js";
+
 /**
  * 404 Not Found 페이지
  */
 export function NotFoundPage() {
-  return /* HTML */ `
-    <main class="max-w-md mx-auto px-4 py-4">
+  return PageLayout({
+    children: /* HTML */ `
       <div class="text-center my-4 py-20 shadow-md p-6 bg-white rounded-lg">
         <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -59,6 +61,6 @@ export function NotFoundPage() {
           >홈으로</a
         >
       </div>
-    </main>
-  `;
+    `,
+  });
 }
