@@ -9,6 +9,9 @@ import { openCartModal, closeCartModal, getSelectedIds, setSelectedIds } from ".
 const enableMocking = () =>
   import("./mocks/browser.js").then(({ worker }) =>
     worker.start({
+      serviceWorker: {
+        url: `${import.meta.env.BASE_URL}mockServiceWorker.js`,
+      },
       onUnhandledRequest: "bypass",
     }),
   );
@@ -408,7 +411,10 @@ document.body.addEventListener("change", (e) => {
 
 // 애플리케이션 시작
 const main = async () => {
-  router.push(location.pathname + location.search);
+  const basePath = import.meta.env.BASE_URL;
+  const pathName = location.pathname;
+  const relativePath = pathName.replace(basePath, "/").replace(/\/$/, "") || "/";
+  router.push(relativePath + location.search);
 };
 
 if (import.meta.env.MODE !== "test") {

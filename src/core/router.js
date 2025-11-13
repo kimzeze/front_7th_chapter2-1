@@ -53,7 +53,9 @@ export const subscribe = (callback) => {
  * push("/product/123");
  */
 export const push = (path) => {
-  window.history.pushState(null, "", path);
+  const basePath = import.meta.env.BASE_URL;
+  const fullPath = basePath === "/" ? path : basePath.replace(/\/$/, "") + path;
+  window.history.pushState(null, "", fullPath);
   updateCurrentRoute();
   observer.notify(currentRoute); // 구독자들에게 알림!
 };
@@ -104,7 +106,9 @@ export const updateQuery = (updates) => {
  * 현재 URL을 파싱하여 currentRoute 업데이트
  */
 const updateCurrentRoute = () => {
-  const path = location.pathname;
+  const basePath = import.meta.env.BASE_URL;
+  const pathName = location.pathname;
+  const path = pathName.replace(basePath, "/").replace(/\/$/, "") || "/";
   const query = Object.fromEntries(new URLSearchParams(location.search));
 
   // 등록된 라우트와 매칭
