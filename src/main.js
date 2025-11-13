@@ -71,6 +71,36 @@ document.body.addEventListener("click", (e) => {
     router.push("/");
     return;
   }
+
+  // 카테고리 필터 - 1depth
+  const $category1Btn = e.target.closest(".category1-filter-btn");
+  if ($category1Btn) {
+    const category1 = $category1Btn.dataset.category1;
+    router.updateQuery({ category1, category2: undefined });
+    return;
+  }
+
+  // 카테고리 필터 - 2depth
+  const $category2Btn = e.target.closest(".category2-filter-btn");
+  if ($category2Btn) {
+    const category2 = $category2Btn.dataset.category2;
+    router.updateQuery({ category2 });
+    return;
+  }
+
+  // breadcrumb - 전체 (카테고리 초기화)
+  const $resetBtn = e.target.closest('[data-breadcrumb="reset"]');
+  if ($resetBtn) {
+    router.updateQuery({ category1: undefined, category2: undefined });
+    return;
+  }
+
+  // breadcrumb - category1 클릭 (category2 초기화)
+  const $breadcrumbCat1 = e.target.closest('[data-breadcrumb="category1"]');
+  if ($breadcrumbCat1) {
+    router.updateQuery({ category2: undefined });
+    return;
+  }
 });
 
 // 검색 기능
